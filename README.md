@@ -1,6 +1,6 @@
 Инструкция по запуску приложения Task Management System
 
-2. Клонировать репозиторий:
+1. Клонировать репозиторий:
 ```
 git clone https://github.com/tatfil/taskSystem
 cd taskSystem
