@@ -16,5 +16,5 @@ public class CommentDTO {
     private String text;
     private Long authorId;
     private ZonedDateTime createdAt;
-    private ZonedDateTime updateAt;
+    private ZonedDateTime updatedAt;
 }

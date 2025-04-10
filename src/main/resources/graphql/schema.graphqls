@@ -1,0 +1,48 @@
+type Query {
+  taskById(id: ID!): TaskDTO
+}
+
+type CommentDTO {
+  id: ID!
+  text: String!
+  authorId: ID!
+  createdAt: String!
+  updatedAt: String!
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum TaskStatus {
+    PENDING
+    IN_PROGRESS
+    COMPLETED
+}
+
+type TaskDTO {
+  id: ID!
+  authorId: ID!
+  executorId: ID!
+  title: String!
+  description: String!
+  priority: TaskPriority!
+  status: TaskStatus!
+  comments: [CommentDTO!]!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type User {
+  id: ID
+  username: String
+}
+
+type Comment {
+  id: ID
+  text: String
+  createdAt: String
+}
+
