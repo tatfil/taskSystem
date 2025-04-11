@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.example.model.dto.TaskCreateDTO;
 import org.example.model.dto.TaskDTO;
+import org.example.model.dto.TaskSummaryDTO;
 import org.example.model.entity.Comment;
 import org.example.model.entity.Task;
 
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -194,6 +196,7 @@ public class TaskService {
 
 
         task.setStatus(TaskStatus.valueOf(status));
+        taskRepository.save(task);
 
         logger.info("Status was updated for task {} by user {}", taskId, userId);
         return TaskDTO.fromEntity(task);
@@ -213,4 +216,29 @@ public class TaskService {
 
         return ResponseEntity.noContent().build();
     }
+
+
+    //---------------for GraphQl--------------------------
+    public List<TaskDTO> findFirstPage(Pageable pageable) {
+        Page<TaskDTO> tasksPage = taskRepository.findAll(pageable).map(TaskDTO::fromEntity);
+        return tasksPage.getContent();
+    }
+
+    public List<TaskDTO> findAllAfterId(Long afterId, Pageable pageable) {
+        List<Task> tasks = taskRepository.findByIdGreaterThanOrderByIdAsc(afterId, pageable);
+        return tasks.stream().map(TaskDTO::fromEntity).toList();
+    }
+
+    public TaskSummaryDTO getSummaryById(Long taskId) {
+
+        logger.info("Fetching tasks by id {} using GraphQL", taskId);
+
+        TaskSummaryDTO taskSummaryDTO = taskRepository.findTaskSummaryById(taskId)
+                    .orElseThrow(() -> new EntityNotFoundException("Task not found"));
+
+        logger.info("Task with id {} found using GraphQL", taskId);
+        return taskSummaryDTO;
+    }
+    //------------------------------------------------------
+
 }
